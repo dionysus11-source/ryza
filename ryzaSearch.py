@@ -21,6 +21,6 @@ def searchKeyword(keyword):
                 ret += str(cnt) + ') '+ items.text + ': 장소:'  +  locations.text + '\n특징: ' + descs.text + '\n'
                 cnt += 1
     if cnt == 1:
-        return 'No found'
+        return 'Not found'
     else:
         return ret
