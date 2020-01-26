@@ -4,6 +4,7 @@ import os.path
 import pandas as pd
 
 filename = 'ryza.csv'
+
 def downloadCsv():
     header = {"user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36"}
     url = 'https://bbs.ruliweb.com/game/85195/read/9418448'
@@ -25,19 +26,19 @@ def downloadCsv():
     df = pd.DataFrame(data)
     df.to_csv(filename)
 
-#if not os.exist(filename):
 def searchKeyword(keyword):
     if not os.path.exists(filename):
         downloadCsv()
     df = pd.read_csv(filename)
     cnt = 1
     ret = keyword + '\n'
-    for i in df.index:
+    filter = df['소재'].str.contains(keyword)
+    find = df.loc[filter,:]
+    for i in find.index:
         target = df.at[i, '소재']
-        if keyword in target:
-            ret += str(cnt) + ') '+ target + ': 장소:'  +  df.at[i, '입수 장소'] + '\n특징: ' + df.at[i, '자세한 사항'] + '\n'
-            cnt += 1
-    if cnt == 1:
-        return 'Not found'
-    else:
+        ret += str(cnt) + ') '+ target + ': 장소:'  +  df.at[i, '입수 장소'] + '\n특징: ' + df.at[i, '자세한 사항'] + '\n'
+        cnt+=1
+    if len(find) >= 1:
         return ret
+    else:
+        return 'Not found'
